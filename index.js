@@ -35,7 +35,7 @@ async function run(){
       res.send(users);
     });
 
-    //UPDATE API
+    //GET DATA OF AN SINGLE USER TO PERFORM UPDATE OR ANYTHING ELSE 
     app.get('/users/:id',async(req,res)=>{
       const id=req.params.id;
       const query={_id:ObjectId(id)};
@@ -55,6 +55,23 @@ async function run(){
       res.json(result);
     });
 
+
+    //UPDATE API
+    app.put('/users/:id',async(req,res)=>{
+      const id=req.params.id;
+      const updateUser=req.body;
+      const filter = { _id:ObjectId(id)};
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          name:updateUser.name,
+          email:updateUser.email
+        },
+      };
+      const result = await useCollection.updateOne(filter, updateDoc, options);
+      res.json(result);
+
+    })
     //DELETE API
     app.delete('/users/:id',async(req,res)=>{
       const id=req.params.id;
